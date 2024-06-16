@@ -1,0 +1,3 @@
+[submodule "32f429idiscovery-bsp"]
+	path = 32f429idiscovery-bsp
+	url = git@github.com:STMicroelectronics/32f429idiscovery-bsp.git
