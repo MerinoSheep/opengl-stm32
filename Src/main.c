@@ -114,29 +114,34 @@ int main(void)
   MX_TIM1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  BSP_LCD_Init();
+  BSP_LCD_LayerDefaultInit(LCD_FOREGROUND_LAYER,LCD_FRAME_BUFFER);
+  BSP_LCD_LayerDefaultInit(LCD_BACKGROUND_LAYER,LCD_FRAME_BUFFER+BUFFER_OFFSET);
 
+  BSP_LCD_SelectLayer(LCD_FOREGROUND_LAYER);
+  BSP_LCD_DisplayOn();
+  BSP_LCD_Clear(LCD_COLOR_WHITE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_Delay(1000);
-  hdma2d.Init.Mode = DMA2D_R2M;
-  hdma2d.Init.ColorMode = DMA2D_ARGB8888;
-  if (HAL_DMA2D_Init(&hdma2d) != HAL_OK)
-{
-    Error_Handler(); // Check if initialization was successful
-}
-  HAL_Delay(1000);
+//   hdma2d.Init.Mode = DMA2D_R2M;
+//   hdma2d.Init.ColorMode = DMA2D_ARGB8888;
+//   if (HAL_DMA2D_Init(&hdma2d) != HAL_OK)
+// {
+//     Error_Handler(); // Check if initialization was successful
+// }
+//   HAL_Delay(1000);
 
-  if (HAL_DMA2D_Start(&hdma2d, 0xFFFF900C, (uint32_t)0xD0000000, 240, 320) != HAL_OK)
-{
-    Error_Handler(); // Check if DMA2D start was successful
-}
-  if (HAL_DMA2D_PollForTransfer(&hdma2d, 100) != HAL_OK)
-{
-  uint32_t errorCode = hdma2d.ErrorCode;
-    Error_Handler(); // Check if the transfer completed successfully
-}
+//   if (HAL_DMA2D_Start(&hdma2d, 0xFFFF900C, (uint32_t)0xD0000000, 240, 320) != HAL_OK)
+// {
+//     Error_Handler(); // Check if DMA2D start was successful
+// }
+//   if (HAL_DMA2D_PollForTransfer(&hdma2d, 100) != HAL_OK)
+// {
+//   uint32_t errorCode = hdma2d.ErrorCode;
+//     Error_Handler(); // Check if the transfer completed successfully
+// }
 
   while (1)
   {
@@ -144,7 +149,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
-    HAL_Delay(1000);
+    HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -161,7 +166,7 @@ void SystemClock_Config(void)
   /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -170,11 +175,18 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 72;
+  RCC_OscInitStruct.PLL.PLLM = 16;
+  RCC_OscInitStruct.PLL.PLLN = 180;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 3;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Activate the Over-Drive mode
+  */
+  if (HAL_PWREx_EnableOverDrive() != HAL_OK)
   {
     Error_Handler();
   }
@@ -185,10 +197,10 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
   {
     Error_Handler();
   }

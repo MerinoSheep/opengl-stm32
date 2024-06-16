@@ -48,16 +48,28 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    ./Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.c
+    ./Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_lcd.c
+    ./Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_sdram.c
+    ./Drivers/BSP/Components/ili9341/ili9341.c
+    ./Drivers/BSP/Components/l3gd20/l3gd20.c
+    ./Drivers/BSP/Components/stmpe811/stmpe811.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    ./Drivers/BSP/Components/Common
+    ./Drivers/BSP/Components/ili9341
+    ./Drivers/BSP/Components/l3gd20
+    ./Drivers/BSP/Components/stmpe811
+    ./Drivers/BSP/STM32F429I-Discovery
 )
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
+    USE_STM32F429I_DISCOVERY_REVD
 )
 
 # Add linked libraries
