@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32f429i_discovery_lcd.h"
+#include "opengl.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,7 +62,7 @@ SDRAM_HandleTypeDef hsdram1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA2D_Init(void);
+// static void MX_DMA2D_Init(void);
 static void MX_FMC_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_LTDC_Init(void);
@@ -106,43 +107,51 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA2D_Init();
+  // MX_DMA2D_Init();
   MX_FMC_Init();
   MX_I2C3_Init();
-  MX_LTDC_Init();
+  // MX_LTDC_Init();
   MX_SPI5_Init();
   MX_TIM1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   BSP_LCD_Init();
-  BSP_LCD_LayerDefaultInit(LCD_FOREGROUND_LAYER,LCD_FRAME_BUFFER);
-  BSP_LCD_LayerDefaultInit(LCD_BACKGROUND_LAYER,LCD_FRAME_BUFFER+BUFFER_OFFSET);
-
-  BSP_LCD_SelectLayer(LCD_FOREGROUND_LAYER);
+  BSP_LCD_LayerDefaultInit(LCD_FOREGROUND_LAYER, LCD_FRAME_BUFFER);
+  // BSP_LCD_LayerDefaultInit(LCD_BACKGROUND_LAYER, LCD_FRAME_BUFFER + BUFFER_OFFSET);
   BSP_LCD_DisplayOn();
-  BSP_LCD_Clear(LCD_COLOR_WHITE);
+  BSP_LCD_SelectLayer(LCD_FOREGROUND_LAYER);
+  BSP_LCD_Clear(LCD_COLOR_TRANSPARENT);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-//   hdma2d.Init.Mode = DMA2D_R2M;
-//   hdma2d.Init.ColorMode = DMA2D_ARGB8888;
-//   if (HAL_DMA2D_Init(&hdma2d) != HAL_OK)
-// {
-//     Error_Handler(); // Check if initialization was successful
-// }
-//   HAL_Delay(1000);
-
-//   if (HAL_DMA2D_Start(&hdma2d, 0xFFFF900C, (uint32_t)0xD0000000, 240, 320) != HAL_OK)
-// {
-//     Error_Handler(); // Check if DMA2D start was successful
-// }
-//   if (HAL_DMA2D_PollForTransfer(&hdma2d, 100) != HAL_OK)
-// {
-//   uint32_t errorCode = hdma2d.ErrorCode;
-//     Error_Handler(); // Check if the transfer completed successfully
-// }
-
+  // For reference the TFT LCD is 240x320
+  // x,y = 0 bottom left
+  glViewport(0, 0, 240, 320);
+  glColor3f(1.0, 0.0, 0.0);
+  glBegin(GL_LINES);
+  // Horizontal Line across screen
+  glVertex2i(0, 40);
+  glVertex2i(239, 40);
+  // Short Horizontal Line
+  glColor3f(0.0, 1.0, 0.0);
+  glVertex2i(40, 20);
+  glVertex2i(80, 20);
+  // Vertical Line
+  glVertex2i(20, 40);
+  glVertex2i(20, 80);
+  // Sloped Line
+  // glVertex2i(0, 0);
+  // glVertex2i(240, 320);
+  glEnd();
+  glBegin(GL_TRIANGLES);
+  glColor3f(1.0, 0.0, 0.0);
+  glVertex2i(180, 100); //right
+  glColor3f(0.0, 1.0, 0.0);
+  glVertex2i(60, 100); //left
+  glColor3f(0.0, 0.0, 1.0);
+  glVertex2i(120, 200);// top
+  glEnd();
   while (1)
   {
     /* USER CODE END WHILE */
@@ -171,22 +180,16 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 180;
+  RCC_OscInitStruct.PLL.PLLN = 168;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 3;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Activate the Over-Drive mode
-  */
-  if (HAL_PWREx_EnableOverDrive() != HAL_OK)
   {
     Error_Handler();
   }
