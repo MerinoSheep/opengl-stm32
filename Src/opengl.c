@@ -1,5 +1,5 @@
 #include <math.h>
-
+#include <string.h>
 #include "opengl.h"
 #include "dma2d.h"
 
@@ -99,7 +99,7 @@ void glVertex2f(float x, float y)
     glVertex4f(x, y, 0.0, 1.0);
 }
 
-void glVertex2i(int x, int y)
+void glVertex2i(GLint x, GLint y)
 {
     glVertex4f((float)x, (float)y, 0.0, 1.0);
 }
@@ -108,6 +108,19 @@ void glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     glHandle.width = width;
     glHandle.height = height;
+}
+
+void glColor3s(GLshort red, GLshort green, GLshort blue)
+{
+    glColor3i((GLint)red, (GLint)green, (GLint)blue);
+}
+
+void glColor3i(GLint red, GLint green, GLint blue)
+{
+    glHandle.color.a = 0xFF;
+    glHandle.color.r = (uint8_t)red;
+    glHandle.color.g = (uint8_t)green;
+    glHandle.color.b = (uint8_t)blue;
 }
 
 void glColor3f(GLfloat red, GLfloat green, GLfloat blue)
@@ -225,6 +238,11 @@ Vertex3f subtractVertex3f(Vertex3f v1, Vertex3f v2)
     return result;
 }
 
+int drawPixel(uint32_t x,uint32_t y,ARGB color){
+    uint32_t offset = (y*240+x)*4;
+    *(uint32_t*)(0xD0000000 + offset) = color.color;
+}
+
 int drawTriangle(vInfo v1, vInfo v2, vInfo v3)
 {
     // TODO bounding box check
@@ -236,9 +254,16 @@ int drawTriangle(vInfo v1, vInfo v2, vInfo v3)
     float d00 = dotProductVertex3f(ab, ab);
     float d01 = dotProductVertex3f(ab, ac);
     float d11 = dotProductVertex3f(ac, ac);
-    for (uint32_t x = 0; x < 240; x++)
+    uint32_t minX,minY;
+    uint32_t maxX,maxY;
+    minX = (uint32_t) fminf(fminf(a.x,b.x),c.x);
+    maxX = (uint32_t) (fmaxf(fmaxf(a.x,b.x),c.x)+1);
+    minY = (uint32_t) fminf(fminf(a.y,b.y),c.y);
+    maxY = (uint32_t) (fmaxf(fmaxf(a.y,b.y),c.y)+1);
+    bool isUniformColor = v1.color.color == v2.color.color && v2.color.color == v3.color.color;
+    for (uint32_t x = minX; x < maxX; x++)
     {
-        for (uint32_t y = 0; y < 320; y++)
+        for (uint32_t y = minY; y < maxY; y++)
         {
             float u, v, w;
             // Cramer's rule
@@ -253,12 +278,20 @@ int drawTriangle(vInfo v1, vInfo v2, vInfo v3)
 
             if ((u >= 0 && v >= 0 && w >= 0) && (u <= 1 && v <= 1 && w <= 1))
             {
+                if(isUniformColor){
+                dma2dDrawHorizLine(v1.color.color, 1, x, y, 1, 1);
+
+                }
+                else{
                 ARGB color;
                 color.a = 0xFF; // TODO change later
                 color.r = (uint8_t)(u * v1.color.r + v * v2.color.r + w * v3.color.r);
                 color.g = (uint8_t)(u * v1.color.g + v * v2.color.g + w * v3.color.g);
                 color.b = (uint8_t)(u * v1.color.b + v * v2.color.b + w * v3.color.b);
-                dma2dDrawHorizLine(color.color, 1, x, y, 1, 1);
+                drawPixel(x,y,color);
+                // dma2dDrawHorizLine(color.color, 1, x, y, 1, 1);
+
+                }
             }
         }
     }
