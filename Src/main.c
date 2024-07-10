@@ -22,7 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stm32f429i_discovery_lcd.h"
-#include "opengl.h"
+#include "gl.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

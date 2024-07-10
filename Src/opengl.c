@@ -1,6 +1,7 @@
 #include <math.h>
 #include <string.h>
-#include "opengl.h"
+#include "gl.h"
+#include "vertex.h"
 #include "dma2d.h"
 
 #define EPSILON 0.00001
@@ -66,31 +67,48 @@ void glEnd(void)
 {
     GLenum mode = glHandle.mode;
     uint32_t step = getStepping(mode);
-    for (int i = 0; i < counter; i += step)
+    switch (mode)
     {
-        switch (mode)
+    case GL_POINTS:
+        break;
+    case GL_LINES:
+        for (int i = 0; i < counter; i += step)
         {
-        case GL_POINTS:
-            break;
-        case GL_LINES:
             drawLine(vertices[i], vertices[i + 1]);
-        case GL_LINE_STRIP:
-            break;
-        case GL_LINE_LOOP:
-            break;
-        case GL_TRIANGLES:
-            drawTriangle(vertices[i], vertices[i + 1], vertices[i + 2]);
-        case GL_TRIANGLE_STRIP:
-            break;
-        case GL_TRIANGLE_FAN:
-            break;
-        case GL_QUADS:
-            break;
-        case GL_QUAD_STRIP:
-            break;
-        case GL_POLYGON:
-            break;
         }
+        break;
+    case GL_LINE_STRIP:
+        // Stepping is different on this which seperates it from
+        for (int i = 0; i < counter; i += step)
+        {
+            drawLine(vertices[i], vertices[i + 1]);
+        }
+        break;
+    case GL_LINE_LOOP:
+        for (int i = 0; i < counter; i += step)
+        {
+            drawLine(vertices[i], vertices[i + 1]);
+        }
+        drawLine(vertices[counter - 1], vertices[0]);
+        break;
+    case GL_TRIANGLES:
+        for (int i = 0; i < counter; i += step){
+        drawTriangle(vertices[i], vertices[i + 1], vertices[i + 2]);
+        }
+        break;
+    case GL_TRIANGLE_STRIP:
+        break;
+    case GL_TRIANGLE_FAN:
+        break;
+    case GL_QUADS:
+        for (int i = 0; i < counter; i += step)
+        {
+        }
+        break;
+    case GL_QUAD_STRIP:
+        break;
+    case GL_POLYGON:
+        break;
     }
 }
 
@@ -238,9 +256,11 @@ Vertex3f subtractVertex3f(Vertex3f v1, Vertex3f v2)
     return result;
 }
 
-int drawPixel(uint32_t x,uint32_t y,ARGB color){
-    uint32_t offset = (y*240+x)*4;
-    *(uint32_t*)(0xD0000000 + offset) = color.color;
+int drawPixel(uint32_t x, uint32_t y, ARGB color)
+{
+    uint32_t offset = (y * 240 + x) * 4;
+    *(uint32_t *)(0xD0000000 + offset) = color.color;
+    return 0;
 }
 
 int drawTriangle(vInfo v1, vInfo v2, vInfo v3)
@@ -254,12 +274,12 @@ int drawTriangle(vInfo v1, vInfo v2, vInfo v3)
     float d00 = dotProductVertex3f(ab, ab);
     float d01 = dotProductVertex3f(ab, ac);
     float d11 = dotProductVertex3f(ac, ac);
-    uint32_t minX,minY;
-    uint32_t maxX,maxY;
-    minX = (uint32_t) fminf(fminf(a.x,b.x),c.x);
-    maxX = (uint32_t) (fmaxf(fmaxf(a.x,b.x),c.x)+1);
-    minY = (uint32_t) fminf(fminf(a.y,b.y),c.y);
-    maxY = (uint32_t) (fmaxf(fmaxf(a.y,b.y),c.y)+1);
+    uint32_t minX, minY;
+    uint32_t maxX, maxY;
+    minX = (uint32_t)fminf(fminf(a.x, b.x), c.x);
+    maxX = (uint32_t)(fmaxf(fmaxf(a.x, b.x), c.x) + 1);
+    minY = (uint32_t)fminf(fminf(a.y, b.y), c.y);
+    maxY = (uint32_t)(fmaxf(fmaxf(a.y, b.y), c.y) + 1);
     bool isUniformColor = v1.color.color == v2.color.color && v2.color.color == v3.color.color;
     for (uint32_t x = minX; x < maxX; x++)
     {
@@ -278,19 +298,19 @@ int drawTriangle(vInfo v1, vInfo v2, vInfo v3)
 
             if ((u >= 0 && v >= 0 && w >= 0) && (u <= 1 && v <= 1 && w <= 1))
             {
-                if(isUniformColor){
-                dma2dDrawHorizLine(v1.color.color, 1, x, y, 1, 1);
-
+                if (isUniformColor)
+                {
+                    dma2dDrawHorizLine(v1.color.color, 1, x, y, 1, 1);
                 }
-                else{
-                ARGB color;
-                color.a = 0xFF; // TODO change later
-                color.r = (uint8_t)(u * v1.color.r + v * v2.color.r + w * v3.color.r);
-                color.g = (uint8_t)(u * v1.color.g + v * v2.color.g + w * v3.color.g);
-                color.b = (uint8_t)(u * v1.color.b + v * v2.color.b + w * v3.color.b);
-                drawPixel(x,y,color);
-                // dma2dDrawHorizLine(color.color, 1, x, y, 1, 1);
-
+                else
+                {
+                    ARGB color;
+                    color.a = 0xFF; // TODO change later
+                    color.r = (uint8_t)(u * v1.color.r + v * v2.color.r + w * v3.color.r);
+                    color.g = (uint8_t)(u * v1.color.g + v * v2.color.g + w * v3.color.g);
+                    color.b = (uint8_t)(u * v1.color.b + v * v2.color.b + w * v3.color.b);
+                    drawPixel(x, y, color);
+                    // dma2dDrawHorizLine(color.color, 1, x, y, 1, 1);
                 }
             }
         }
