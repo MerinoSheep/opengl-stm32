@@ -3,6 +3,7 @@
         "stm32f4xx_hal_def.h": "c",
         "opengl.h": "c",
         "main.h": "c",
-        "dma2d.h": "c"
+        "dma2d.h": "c",
+        "string.h": "c"
     }
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 typedef struct
 {
     float x;
@@ -12,3 +14,5 @@ typedef struct
     float y;
     float z;
 } Vertex3f;
+
+

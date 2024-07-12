@@ -43,6 +43,7 @@ add_subdirectory(cmake/stm32cubemx)
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
+    ./Src
 )
 
 # Add sources to executable
@@ -54,8 +55,9 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ./Drivers/BSP/Components/ili9341/ili9341.c
     ./Drivers/BSP/Components/l3gd20/l3gd20.c
     ./Drivers/BSP/Components/stmpe811/stmpe811.c
-    ./Src/opengl.c
+    ./Src/gl.c
     ./Src/dma2d.c
+    ./Src/helper.c
 )
 
 # Add include paths
