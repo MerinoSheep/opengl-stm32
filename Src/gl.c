@@ -4,6 +4,7 @@
 #include "vertex.h"
 #include "helper.h"
 #include "dma2d.h"
+#include "queue.h"
 #include <math.h>
 int counter = 0; // temporary counter
 
@@ -14,6 +15,9 @@ int counter = 0; // temporary counter
 
 
 glHandleTypeDef glHandle;
+// TODO figur out where this goes
+Queue q;
+// queueInit(&q);
 vInfo vertices[MAX_VERTICES];
 
 
@@ -173,7 +177,9 @@ void glGenTextures(GLsizei n,GLuint *textures){}
 void glGetBooleanv(GLenum pname,GLboolean *params){}
 void glGetClipPlane(GLenum plane,GLdouble *equation){}
 void glGetDoublev(GLenum pname,GLdouble *params){}
-GLenum glGetError(void){}
+GLenum glGetError(void){
+    return queuePop(&q);
+}
 void glGetFloatv(GLenum pname,GLfloat *params){}
 void glGetIntegerv(GLenum pname,GLint *params){}
 void glGetLightfv(GLenum light,GLenum pname,GLfloat *params){}
