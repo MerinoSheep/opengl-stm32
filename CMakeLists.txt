@@ -58,6 +58,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ./Src/gl.c
     ./Src/dma2d.c
     ./Src/helper.c
+    ./Src/queue.c
 )
 
 # Add include paths

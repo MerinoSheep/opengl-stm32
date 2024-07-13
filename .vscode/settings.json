@@ -4,6 +4,9 @@
         "opengl.h": "c",
         "main.h": "c",
         "dma2d.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "cstdint": "c",
+        "queue.h": "c",
+        "vector": "c"
     }
 }
