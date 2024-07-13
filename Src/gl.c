@@ -45,38 +45,107 @@ void glClearDepth(GLclampd depth){}
 void glClearIndex(GLfloat c){}
 void glClearStencil(GLint s){}
 void glClipPlane(GLenum plane,const GLdouble *equation){}
-void glColor3b(GLbyte red,GLbyte green,GLbyte blue){}
-void glColor3bv(const GLbyte *v){}
-void glColor3d(GLdouble red,GLdouble green,GLdouble blue){}
-void glColor3dv(const GLdouble *v){}
-void glColor3f(GLfloat red,GLfloat green,GLfloat blue){}
-void glColor3fv(const GLfloat *v){}
-void glColor3i(GLint red,GLint green,GLint blue){}
-void glColor3iv(const GLint *v){}
-void glColor3s(GLshort red,GLshort green,GLshort blue){}
-void glColor3sv(const GLshort *v){}
-void glColor3ub(GLubyte red,GLubyte green,GLubyte blue){}
-void glColor3ubv(const GLubyte *v){}
-void glColor3ui(GLuint red,GLuint green,GLuint blue){}
-void glColor3uiv(const GLuint *v){}
-void glColor3us(GLushort red,GLushort green,GLushort blue){}
-void glColor3usv(const GLushort *v){}
-void glColor4b(GLbyte red,GLbyte green,GLbyte blue,GLbyte alpha){}
-void glColor4bv(const GLbyte *v){}
-void glColor4d(GLdouble red,GLdouble green,GLdouble blue,GLdouble alpha){}
-void glColor4dv(const GLdouble *v){}
-void glColor4f(GLfloat red,GLfloat green,GLfloat blue,GLfloat alpha){}
-void glColor4fv(const GLfloat *v){}
-void glColor4i(GLint red,GLint green,GLint blue,GLint alpha){}
-void glColor4iv(const GLint *v){}
-void glColor4s(GLshort red,GLshort green,GLshort blue,GLshort alpha){}
-void glColor4sv(const GLshort *v){}
-void glColor4ub(GLubyte red,GLubyte green,GLubyte blue,GLubyte alpha){}
-void glColor4ubv(const GLubyte *v){}
-void glColor4ui(GLuint red,GLuint green,GLuint blue,GLuint alpha){}
-void glColor4uiv(const GLuint *v){}
-void glColor4us(GLushort red,GLushort green,GLushort blue,GLushort alpha){}
-void glColor4usv(const GLushort *v){}
+void glColor3b(GLbyte red,GLbyte green,GLbyte blue){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, 0xFF);
+}
+void glColor3bv(const GLbyte *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], 0xFF);
+}
+void glColor3d(GLdouble red,GLdouble green,GLdouble blue){
+    glColor4ub(255*red, 255*green, 255*blue, 0xFF);
+}
+void glColor3dv(const GLdouble *v){
+    glColor4ub(255*v[0], 255*v[1], 255*v[2], 0xFF);
+}
+void glColor3f(GLfloat red,GLfloat green,GLfloat blue){
+    glColor4ub(255*red, 255*green, 255*blue, 0xFF);
+}
+void glColor3fv(const GLfloat *v){
+    glColor4ub(255*v[0], 255*v[1], 255*v[2], 0xFF);
+}
+void glColor3i(GLint red,GLint green,GLint blue){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, 0xFF);
+}
+void glColor3iv(const GLint *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], 0xFF);
+}
+void glColor3s(GLshort red,GLshort green,GLshort blue){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, 0xFF);
+}
+void glColor3sv(const GLshort *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], 0xFF);
+}
+void glColor3ub(GLubyte red,GLubyte green,GLubyte blue){
+    glColor4ub(red, green, blue, 0xFF);
+}
+void glColor3ubv(const GLubyte *v){
+    glColor4ub(v[0], v[1], v[2], 0xFF);
+}
+void glColor3ui(GLuint red,GLuint green,GLuint blue){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, 0xFF);
+}
+void glColor3uiv(const GLuint *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], 0xFF);
+}
+void glColor3us(GLushort red,GLushort green,GLushort blue){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, 0xFF);
+}
+void glColor3usv(const GLushort *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], 0xFF);
+}
+void glColor4b(GLbyte red,GLbyte green,GLbyte blue,GLbyte alpha){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, (GLubyte)alpha);
+}
+void glColor4bv(const GLbyte *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], (GLubyte)v[3]);
+}
+void glColor4d(GLdouble red,GLdouble green,GLdouble blue,GLdouble alpha){
+    glColor4ub(255*red, 255*green, 255*blue, 255*alpha);
+}
+void glColor4dv(const GLdouble *v){
+    glColor4ub(255*v[0], 255*v[1], 255*v[2], 255*v[3]);
+}
+void glColor4f(GLfloat red,GLfloat green,GLfloat blue,GLfloat alpha){
+    glColor4ub(255*red, 255*green, 255*blue, 255*alpha);
+}
+void glColor4fv(const GLfloat *v){
+    glColor4ub(255*v[0], 255*v[1], 255*v[2], 255*v[3]);
+}
+void glColor4i(GLint red,GLint green,GLint blue,GLint alpha){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, (GLubyte)alpha);
+}
+void glColor4iv(const GLint *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], (GLubyte)v[3]);
+}
+void glColor4s(GLshort red,GLshort green,GLshort blue,GLshort alpha){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, (GLubyte)alpha);
+}
+void glColor4sv(const GLshort *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], (GLubyte)v[3]);
+}
+
+// On STM the color is stored as ARGB so glColor4ub is our base function, since each color is max 8 bits
+void glColor4ub(GLubyte red,GLubyte green,GLubyte blue,GLubyte alpha){
+    glHandle.color.r = red;
+    glHandle.color.g = green;
+    glHandle.color.b = blue;
+    glHandle.color.a = alpha;
+}
+void glColor4ubv(const GLubyte *v){
+    glColor4ub(v[0], v[1], v[2], v[3]);
+}
+void glColor4ui(GLuint red,GLuint green,GLuint blue,GLuint alpha){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, (GLubyte)alpha);
+}
+void glColor4uiv(const GLuint *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], (GLubyte)v[3]);
+}
+void glColor4us(GLushort red,GLushort green,GLushort blue,GLushort alpha){
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, (GLubyte)alpha);
+}
+void glColor4usv(const GLushort *v){
+    glColor4ub((GLubyte)v[0], (GLubyte)v[1], (GLubyte)v[2], (GLubyte)v[3]);
+}
 void glColorMask(GLboolean red,GLboolean green,GLboolean blue,GLboolean alpha){}
 void glColorMaterial(GLenum face,GLenum mode){}
 void glColorPointer(GLint size,GLenum type,GLsizei stride,const GLvoid *pointer){}
